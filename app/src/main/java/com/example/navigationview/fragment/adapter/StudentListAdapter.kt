@@ -8,44 +8,45 @@ import com.example.navigationview.R
 import com.example.navigationview.databinding.RowItemStudentBinding
 import com.example.navigationview.db.model.Student
 import com.example.navigationview.listener.StudentCellClickListener
-import kotlinx.android.synthetic.main.row_item_student.view.tvAddress
-import kotlinx.android.synthetic.main.row_item_student.view.tvEmail
-import kotlinx.android.synthetic.main.row_item_student.view.tvName
-import kotlinx.android.synthetic.main.row_item_student.view.tvPhone
 
 class StudentListAdapter : RecyclerView.Adapter<StudentListAdapter.StudentListHolder>() {
-    var studentList :List<Student> = ArrayList()
-    var studentClicklistener: StudentCellClickListener? = null
+    var list: List<Student> = ArrayList()
+    var listener: StudentCellClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentListHolder {
-       val binding : RowItemStudentBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.row_item_student, parent, false)
-       return StudentListHolder(binding)
+        val binding: RowItemStudentBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.row_item_student,
+            parent,
+            false
+        )
+        return StudentListHolder(binding)
+
     }
 
     override fun onBindViewHolder(holder: StudentListHolder, position: Int) {
-        holder.onBind(position)
+        holder.bind(list[position])
     }
 
     override fun getItemCount(): Int {
-        return studentList.size
+        return list.size
     }
 
-    fun updateAdapter(listItem: ArrayList<Student>, listener: StudentCellClickListener) {
-        this.studentList = listItem
-        this.studentClicklistener = listener
+    fun updateAdapter(
+        arrayList: ArrayList<Student>,
+        studentCellClickListener: StudentCellClickListener
+    ) {
+        this.list = arrayList
+        this.listener = studentCellClickListener
         notifyDataSetChanged()
     }
 
-    inner class StudentListHolder(itemView: RowItemStudentBinding) :
-        RecyclerView.ViewHolder(itemView.root){
-        fun onBind(position: Int) {
-            val row = studentList[position]
-            itemView.tvName.text = "Name: ${row.name}"
-            itemView.tvEmail.text = "Email: ${row.email}"
-            itemView.tvAddress.text = "Info: ${row.address}"
-            itemView.tvPhone.text = "Phone: ${row.phone}"
-            itemView.setOnClickListener{
-                studentClicklistener?.itemClickListener(row)
+    inner class StudentListHolder(val binding: RowItemStudentBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(student: Student) {
+            binding.data = student
+            binding.cvCell.setOnClickListener {
+                listener?.itemClickListener(student)
             }
         }
     }

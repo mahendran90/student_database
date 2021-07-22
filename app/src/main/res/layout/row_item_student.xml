@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
         <variable
-            name="student"
-            type="com.example.navigationview.viewmodel.StudentViewModel" />
+            name="data"
+            type="com.example.navigationview.db.model.Student" />
     </data>
 
     <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cvCell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                 android:paddingLeft="10dp"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:text="sdfsf"
+                android:text="@{String.format(@string/name, data.name)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,7 +50,7 @@
                 android:paddingLeft="10dp"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:text="sdfsadf"
+                android:text="@{String.format(@string/email, data.email)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
@@ -62,7 +62,7 @@
                 android:paddingLeft="10dp"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:text="sdafsdf"
+                android:text="@{String.format(@string/address, data.address)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
 
@@ -74,7 +74,7 @@
                 android:paddingLeft="10dp"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:text="sdsdfsdfsdf"
+                android:text="@{String.format(@string/phone, data.phone)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 

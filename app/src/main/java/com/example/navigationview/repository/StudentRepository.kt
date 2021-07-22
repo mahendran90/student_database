@@ -1,5 +1,6 @@
 package com.example.navigationview.repository
 
+import androidx.lifecycle.LiveData
 import com.example.navigationview.db.AppDatabase
 import com.example.navigationview.db.model.Student
 import java.lang.Exception
@@ -10,21 +11,21 @@ class StudentRepository @Inject constructor(private val database: AppDatabase) {
     /**
      * Fetch multiple student from data base
      */
-    suspend fun getStudentList(): List<Student> {
+     fun getStudentList(): LiveData<List<Student>> {
         return database.studentDao().getStudentList()
     }
 
     /**
      * Insert individual student record in Table
      */
-    suspend fun addStudentInfo(student: Student): Long {
+     suspend fun addStudentInfo(student: Student): Long {
         return database.studentDao().insert(student)
     }
 
     /**
      * Get Individual student record from db with Student primary ID
      */
-    suspend fun getIndividualStudent(id: Long): Student {
+    fun getIndividualStudent(id: Long): LiveData<Student> {
         return database.studentDao().getIndividualStudent(id)
     }
 

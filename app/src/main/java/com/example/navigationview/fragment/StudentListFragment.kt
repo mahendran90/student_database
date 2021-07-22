@@ -79,7 +79,7 @@ class StudentListFragment : Fragment() {
         studentViewModel.getStudentList()
 
         //Observe the student list livedata along with fragment/activity lifecycle
-        studentViewModel.studentList.observe(viewLifecycleOwner, Observer {
+        studentViewModel.studentList?.observe(viewLifecycleOwner, Observer {
             if(it.isNotEmpty()) {
                 binding.tvNoRecord.visibility = View.GONE
                 studentListAdapter.updateAdapter(

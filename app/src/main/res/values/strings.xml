@@ -14,4 +14,8 @@
     <string name="email_error">Enter a valid email</string>
     <string name="address_error">Enter a valid address</string>
     <string name="phone_error">Enter a valid phone</string>
+    <string name="name">Name: %s</string>
+    <string name="address">Address: %s</string>
+    <string name="email">Email: %s</string>
+    <string name="phone">Phone: %s</string>
 </resources>

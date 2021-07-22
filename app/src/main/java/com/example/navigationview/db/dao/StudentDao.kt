@@ -1,5 +1,7 @@
 package com.example.navigationview.db.dao
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.navigationview.db.model.Student
@@ -8,9 +10,8 @@ import com.example.navigationview.db.model.Student
 interface StudentDao : BaseDAO<Student> {
 
     @Query(value = "Select * from student")
-    suspend fun getStudentList(): List<Student>
+    fun getStudentList(): LiveData<List<Student>>
 
     @Query(value = "Select * from student where id =:ids")
-    suspend fun getIndividualStudent(ids: Long): Student
-
+    fun getIndividualStudent(ids: Long): LiveData<Student>
 }

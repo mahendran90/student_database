@@ -2,7 +2,6 @@
 <layout>
 
     <data>
-
         <variable
             name="studentViewModel"
             type="com.example.navigationview.viewmodel.StudentViewModel" />
@@ -48,6 +47,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
+            android:text="@={studentViewModel.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvName"
             app:layout_constraintTop_toBottomOf="@+id/tvHead" />
@@ -56,6 +56,7 @@
             android:id="@+id/tvNameError"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@={studentViewModel.nameError}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvName"
             app:layout_constraintTop_toBottomOf="@+id/evName" />
@@ -77,6 +78,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginRight="10dp"
+            android:text="@={studentViewModel.email}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvName"
             app:layout_constraintTop_toBottomOf="@+id/tvNameError" />
@@ -85,6 +87,7 @@
             android:id="@+id/tvEmailError"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@={studentViewModel.emailError}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvEmail"
             app:layout_constraintTop_toBottomOf="@+id/evEmail" />
@@ -107,6 +110,7 @@
             android:layout_height="50dp"
             android:layout_marginRight="10dp"
             android:maxLines="3"
+            android:text="@={studentViewModel.address}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvAddress"
             app:layout_constraintTop_toBottomOf="@+id/tvEmailError" />
@@ -115,6 +119,7 @@
             android:id="@+id/tvAddressError"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@={studentViewModel.addressError}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvAddress"
             app:layout_constraintTop_toBottomOf="@+id/evAddress" />
@@ -138,6 +143,8 @@
             android:layout_height="50dp"
             android:layout_marginRight="10dp"
             android:inputType="number"
+            android:maxLength="10"
+            android:text="@={studentViewModel.phone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvPhone"
             app:layout_constraintTop_toBottomOf="@+id/tvAddressError" />
@@ -146,6 +153,7 @@
             android:id="@+id/tvPhoneError"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@={studentViewModel.phoneError}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvPhone"
             app:layout_constraintTop_toBottomOf="@+id/evPhone" />
@@ -159,6 +167,7 @@
             android:layout_marginTop="50dp"
             android:layout_marginRight="20dp"
             android:text="save"
+            android:onClick="@{()->studentViewModel.addorUpdateStudent()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/evPhone" />

@@ -1,9 +1,12 @@
 package com.example.navigationview.viewmodel
 
+import android.app.Activity
 import android.app.Application
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.*
+import com.example.navigationview.R
 import com.example.navigationview.db.model.Student
-import com.example.navigationview.extension.validation.view_ktx.validator
 import com.example.navigationview.repository.StudentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,7 +21,14 @@ class StudentViewModel @Inject constructor(
     /**
      * get list of student list from DB
      */
-    var studentList = MutableLiveData<List<Student>>()
+   // var studentList: LiveData<List<Student>>? = null
+
+    var studentList: LiveData<List<Student>>? = null
+
+    /**
+     * get list of student list from DB
+     */
+    var student: LiveData<Student>? = null
 
     /**
      * get list of student list from DB
@@ -29,35 +39,49 @@ class StudentViewModel @Inject constructor(
      * get list of student list from DB
      */
     var updateStudentRecord = MutableLiveData<Int>()
-
-    /**
-     * get list of student list from DB
-     */
-    var student = MutableLiveData<Student>()
-
     var nameError = MutableLiveData<String>()
     var emailError = MutableLiveData<String>()
     var addressError = MutableLiveData<String>()
     var phoneError = MutableLiveData<String>()
+
+
+
+    var id: String? = null
+    var from: String? = null
+    var email = MutableLiveData<String>()
+    var name = MutableLiveData<String>()
+    var address = MutableLiveData<String>()
+    var phone = MutableLiveData<String>()
 
     /*
     * Get list of student into table
     */
     fun getStudentList() {
         viewModelScope.launch {
-            studentList.value = repository.getStudentList()
+            studentList = repository.getStudentList()
         }
     }
 
     /*
     * Added new student record into table
     */
-    fun addStudentInfo(name: String, email: String, address: String, phone: String) {
+    fun addStudentInfo() {
         // validate input fields
-        val isValid = validateUserInputFiled(name, email, address, phone)
+        val isValid = validateUserInputFiled(
+            name.value,
+            email.value,
+            address.value,
+            phone.value
+        )
         viewModelScope.launch {
             if (isValid) {
-                val data = Student(null, name, email, address, phone)
+                val data = Student(
+                    null,
+                    name.value.toString(),
+                    email.value.toString(),
+                    address.value.toString(),
+                    phone.value.toString()
+                )
                 addStudentInfo.value = repository.addStudentInfo(data)
             }
         }
@@ -66,12 +90,23 @@ class StudentViewModel @Inject constructor(
     /*
      * updated existing student record into table
      */
-    fun updateStudent(id: Int?, name: String, email: String, address: String, phone: String) {
+    fun updateStudent(id: Int?) {
         // validate input fields
-        val isValid = validateUserInputFiled(name, email, address, phone)
+        val isValid = validateUserInputFiled(
+            name.value,
+            email.value,
+            address.value,
+            phone.value
+        )
         viewModelScope.launch {
             if (isValid) {
-                val data = Student(id, name, email, address, phone)
+                val data = Student(
+                    id,
+                    name.value.toString(),
+                    email.value.toString(),
+                    address.value.toString(),
+                    phone.value.toString()
+                )
                 updateStudentRecord.value = repository.updateStudentInfo(data)
             }
         }
@@ -83,7 +118,7 @@ class StudentViewModel @Inject constructor(
     fun fetchSingleStudent(id: String?) {
         viewModelScope.launch {
             id?.let {
-                student.value = repository.getIndividualStudent(it.toLong())
+                student = repository.getIndividualStudent(it.toLong())
             }
         }
     }
@@ -92,59 +127,66 @@ class StudentViewModel @Inject constructor(
      * Validate user inputs
      */
     private fun validateUserInputFiled(
-        name: String,
-        email: String,
-        address: String,
-        phone: String
+        name: String? = null,
+        email: String? = null,
+        address: String? = null,
+        phone: String? = null
     ): Boolean {
-        var nameValid = false
-        var emailValid = false
-        var addressValid = false
-        var phoneValid = false
-        name.validator().nonEmpty("Name cannot be empty")
-            .maxLength(255)
-            .addErrorCallback {
-                nameError.value = "Please enter valid name"
+        var nameValid: Boolean? = false
+        var emailValid: Boolean? = false
+        var addressValid: Boolean? = false
+        var phoneValid: Boolean? = false
+
+        if (name.isNullOrEmpty())
+            nameError.value = getApplication<Application>().resources.getString(R.string.name_error)
+        else
+            nameValid = true
+
+        if (email.isNullOrEmpty()) {
+            emailError.value = getApplication<Application>().resources.getString(R.string.email_error)
+        }else {
+            emailValid = isEmail(email)
+            if(emailValid == false){
+                emailError.value = getApplication<Application>().resources.getString(R.string.email_error)
             }
-            .addSuccessCallback {
-                nameValid = true
-            }
-            .check()
+        }
 
 
-        email.validator().nonEmpty("email cannot be empty")
-            .maxLength(255)
-            .addErrorCallback {
-                emailError.value = "Please enter valid email"
-            }
-            .addSuccessCallback {
-                emailValid = true
-            }
-            .check()
+        if (address.isNullOrEmpty())
+            addressError.value = getApplication<Application>().resources.getString(R.string.address_error)
+        else
+            addressValid = true
 
-        address.validator().nonEmpty("address cannot be empty")
-            .maxLength(255)
-            .addErrorCallback {
-                addressError.value = "Please enter valid address"
-            }
-            .addSuccessCallback {
-                addressValid = true
-            }
-            .check()
 
-        phone.validator().nonEmpty("phone cannot be empty")
-            .maxLength(255)
-            .addErrorCallback {
-                phoneError.value = "Please enter valid phone"
-            }
-            .addSuccessCallback {
+        if (phone.isNullOrEmpty()) {
+            phoneError.value = getApplication<Application>().resources.getString(R.string.phone_error)
+        } else {
+            if (phone.length != 10)
+                phoneError.value = getApplication<Application>().resources.getString(R.string.phone_error)
+            else
                 phoneValid = true
-            }
-            .check()
-
-        return if (nameValid && emailValid && addressValid && phoneValid)
+        }
+        return if (nameValid!! && emailValid!! && addressValid!! && phoneValid!!)
             true
         else
             false
     }
+
+
+    fun isEmail(email: String?):Boolean{
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    fun addorUpdateStudent() {
+        nameError.value = ""
+        emailError.value = ""
+        addressError.value = ""
+        phoneError.value = ""
+        if (from.isNullOrEmpty())
+            addStudentInfo()
+        else
+            updateStudent(id?.toInt())
+    }
+
+
 }
